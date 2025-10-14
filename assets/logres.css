@@ -7,9 +7,10 @@
 }
 
 header {
+    padding: 0;
+    margin: 0;
     background-color: #4CAF50;
     color: white;
-    padding: 10px 0;
     text-align: center;
     font-size: 24px;
     font-weight: bold;
@@ -130,4 +131,11 @@ label {
 .menu-botones-iniciar li a:active {
     outline: none;
     box-shadow: none;
+}
+
+.logo-nav {
+    display: flex;
+    margin: 0 auto 20px;
+    max-width: 150px;
+    align-items:first baseline;
 }
