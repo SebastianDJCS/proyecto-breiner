@@ -142,22 +142,46 @@ label {
 }
 
 .boton {
-    background-color: #f1a605;
     color: white;
-    padding: 10px 15px;
-
-    border-radius: 4px;
+    text-decoration: none;
+    font-size: 1rem;
+    padding: 0.8rem 1.5rem;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    background: #f1a605;
+    border: 2px solid white;
     cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
     width: 300px;
     align-self: center;
-    border-radius: 10px;
     margin-top: 10px;
 }
-.boton:hover {
-    background-color: #282e29;
-    transform: scale(1.1);
-    transition: transform 0.3s ease;
-    text-decoration:underline
+
+.boton::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: white;
+    transition: all 0.4s ease;
+    z-index: -1;
 }
+
+.boton:hover {
+    color: #ce8d00;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.boton:hover::before {
+    left: 0;
+}
+
+.boton:active {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
