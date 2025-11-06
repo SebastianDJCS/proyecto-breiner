@@ -36,7 +36,7 @@ function formatPrice(price) {
 // Función principal de búsqueda
 async function searchRestaurants(filters) {
     // La búsqueda ahora se realiza en el servidor
-    const results = await fetchRestaurants(filters);
+    const results = await fetchRestaurants(filters);{
 
         // Filtro por calificación mínima
         if (filters.minRating) {
@@ -51,7 +51,7 @@ async function searchRestaurants(filters) {
         }
 
         return matches;
-    });
+    };
 }
 
 // Función para actualizar los resultados en la UI

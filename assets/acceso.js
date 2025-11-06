@@ -9,7 +9,7 @@ document.getElementById("loginForm").addEventListener("submit", function(e) {
     
     if(usuario === usuario_permitido && contrasena === contrasena_permitida) {
         alert("Acceso concedido");
-        window.location.href = "index.html";
+        window.location.href = "admin.html";
     } else {
         alert("Acceso denegado");
     } 

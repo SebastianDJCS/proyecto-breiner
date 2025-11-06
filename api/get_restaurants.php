@@ -43,10 +43,10 @@ function getRestaurants($filters = []) {
             $params[] = $filters['category'];
         }
 
-        // Filtrar por precio máximo
-        if (!empty($filters['maxPrice'])) {
-            $where[] = "r.precio_promedio <= ?";
-            $params[] = $filters['maxPrice'];
+        // Filtrar por precio mínimo
+        if (!empty($filters['minPrice'])) {
+            $where[] = "r.precio_promedio >= ?";
+            $params[] = $filters['minPrice'];
         }
 
         // Filtrar por calificación mínima
