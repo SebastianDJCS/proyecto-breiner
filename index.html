@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GastroGuia</title>
+    <link rel="stylesheet" href="assets/estilos.css">
+    <script src="assets/search.js" defer></script>
+</head>
+
+<body>
+    <header class="main-header">
+        <nav class="nav-menu">
+            <div class="nav-container">
+                <div class="logo">
+                    <img src="img/sopa.png" alt="GastroGuia Logo">
+                </div>
+                <div class="nav-items">
+                    <a href="login.html" class="nav-btn">Iniciar Sesión</a>
+                    <a href="registro.html" class="nav-btn">Registrarse</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main id ="main-content" role="main">
+        <section id="hero">
+            <div class="hero-content">
+                <h1>Welcome to GastroGuia</h1>
+                <p>Tu guia definitiva para encontrar tu restaurante ideal.</p>
+            </div>
+        </section>
+
+        <section id="buscador">
+            <div class="search-container">
+                <h2>Buscador según tus preferencias</h2>
+                <form id="search-form" class="search-form">
+                    <div class="filter-group">
+                        <label for="name-filter">Nombre</label>
+                        <input type="text" id="search-text" class="search-input" placeholder="Buscar por nombre o dirección">
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="category-filter">Categoría</label>
+                        <select id="category-filter" class="search-input">
+                            <option value="all">Todas las categorías</option>
+                            <option value="Comida Rápida">Comida Rápida</option>
+                            <option value="Restaurante">Restaurante</option>
+                            <option value="Cafetería">Cafetería</option>
+                            <option value="Bar">Bar</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="price-range">Precio mínimo: <span id="price-value">$50.000</span></label>
+                        <div class="price-slider-container">
+                            <input type="range" 
+                                   id="price-range" 
+                                   class="price-slider" 
+                                   min="10000" 
+                                   max="100000" 
+                                   step="5000" 
+                                   value="50000">
+                            <div class="price-labels">
+                                <span>$10.000</span>
+                                <span>$1.000.000</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="rating-filter">Calificación mínima</label>
+                        <select id="rating-filter" class="search-input">
+                            <option value="0">Todas</option>
+                            <option value="3">3+ estrellas</option>
+                            <option value="4">4+ estrellas</option>
+                            <option value="4.5">4.5+ estrellas</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label>Características</label>
+                        <div class="features-container">
+                            <div class="feature-item">
+                                <input type="checkbox" id="delivery" class="feature-checkbox" value="Delivery">
+                                <label for="delivery">Delivery</label>
+                            </div>
+                            <div class="feature-item">
+                                <input type="checkbox" id="terraza" class="feature-checkbox" value="Terraza">
+                                <label for="terraza">Terraza</label>
+                            </div>
+                            <div class="feature-item">
+                                <input type="checkbox" id="wifi" class="feature-checkbox" value="Wifi">
+                                <label for="wifi">Wifi</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="search-button">Buscar</button>
+                </form>
+                
+                <div id="search-results">
+                    <!-- Los resultados se mostrarán aquí -->
+                </div>
+            </div>
+        </section>
+    
+    </main>
+
+    <footer class="main-footer">
+        <p>&copy; 2025 GastroGuia. All rights reserved.</p>
+        <p>Sitio Web creado para proyecto en clase</p>
+        
+</body>
+</html>
