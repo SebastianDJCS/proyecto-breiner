@@ -56,7 +56,7 @@ try {
     error_log("Datos decodificados: " . print_r($data, true));
 
     // Validar datos requeridos
-    $required = ['nombre', 'descripcion', 'direccion', 'zona_r', 'tipo', 'precio_min', 'precio_max', 'plato_economico', 'plato_caro', 'url'];
+    $required = ['nombre', 'descripcion', 'direccion', 'zona_r', 'tipo', 'precio_min', 'precio_max', 'plato_economico', 'plato_caro', 'url', 'calificacion', 'caracteristicas'];
     $missing = array_filter($required, fn($field) => !isset($data[$field]) || trim($data[$field]) === '');
     
     if (!empty($missing)) {
@@ -66,8 +66,8 @@ try {
     // Preparar la consulta - usar ? en lugar de $1, $2, etc.
     $sql = "INSERT INTO restaurantes (
         nombre, descripcion, direccion, zona_r, tipo, 
-        precio_min, precio_max, plato_economico, plato_caro, url
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) 
+        precio_min, precio_max, plato_economico, plato_caro, url, calificacion, caracteristicas
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) 
     RETURNING id";
 
     error_log("SQL a ejecutar: " . $sql);
@@ -83,7 +83,9 @@ try {
         (int)$data['precio_max'],
         $data['plato_economico'],
         $data['plato_caro'],
-        $data['url']
+        $data['url'],
+        (float)$data['calificacion'],
+        $data['caracteristicas']
     ];
     
     error_log("Parámetros: " . print_r($params, true));

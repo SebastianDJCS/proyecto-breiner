@@ -83,6 +83,46 @@
                     <label for="url">URL del Restaurante:</label>
                     <input type="url" id="url" name="url" placeholder="https://ejemplo.com" required>
                 </div>
+
+                <div class="form-group">
+                    <label for="calificacion">Calificación:</label>
+                    <select id="calificacion" name="calificacion" required>
+                        <option value="">Selecciona una calificación</option>
+                        <option value="1.0">⭐ 1.0</option>
+                        <option value="1.5">⭐ 1.5</option>
+                        <option value="2.0">⭐⭐ 2.0</option>
+                        <option value="2.5">⭐⭐ 2.5</option>
+                        <option value="3.0">⭐⭐⭐ 3.0</option>
+                        <option value="3.5">⭐⭐⭐ 3.5</option>
+                        <option value="4.0">⭐⭐⭐⭐ 4.0</option>
+                        <option value="4.5">⭐⭐⭐⭐ 4.5</option>
+                        <option value="5.0">⭐⭐⭐⭐⭐ 5.0</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Características:</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="caracteristicas" value="WiFi"> WiFi
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="caracteristicas" value="Estacionamiento"> Estacionamiento
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="caracteristicas" value="Delivery"> Delivery
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="caracteristicas" value="Reservas"> Reservas
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="caracteristicas" value="Música en vivo"> Música en vivo
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="caracteristicas" value="Accesible"> Accesible
+                        </label>
+                    </div>
+                </div>
                 
                 <div class="form-actions">
                     <button type="submit" class="admin-btn save-btn">Guardar</button>

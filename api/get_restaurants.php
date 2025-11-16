@@ -25,7 +25,7 @@ try {
     $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
     
     // Construir la consulta base
-    $sql = "SELECT id, nombre, descripcion, direccion, zona_r, tipo, precio_min, precio_max, plato_economico, plato_caro, url FROM restaurantes WHERE 1=1";
+    $sql = "SELECT id, nombre, descripcion, direccion, zona_r, tipo, precio_min, precio_max, plato_economico, plato_caro, url, calificacion, caracteristicas FROM restaurantes WHERE 1=1";
     $params = [];
     
     // Filtrar por búsqueda de texto

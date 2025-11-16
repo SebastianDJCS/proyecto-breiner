@@ -39,7 +39,7 @@ if (!$data) {
 }
 
 // Validar campos requeridos
-$requiredFields = ['nombre', 'descripcion', 'direccion', 'zona_r', 'tipo', 'precio_min', 'precio_max', 'plato_economico', 'plato_caro', 'url'];
+$requiredFields = ['nombre', 'descripcion', 'direccion', 'zona_r', 'tipo', 'precio_min', 'precio_max', 'plato_economico', 'plato_caro', 'url', 'calificacion', 'caracteristicas'];
 foreach ($requiredFields as $field) {
     if (!isset($data[$field])) {
         http_response_code(400);
@@ -68,7 +68,9 @@ try {
             precio_max = ?, 
             plato_economico = ?, 
             plato_caro = ?,
-            url = ?
+            url = ?,
+            calificacion = ?,
+            caracteristicas = ?
         WHERE id = ?
     ');
     
@@ -83,6 +85,8 @@ try {
         $data['plato_economico'],
         $data['plato_caro'],
         $data['url'],
+        (float)$data['calificacion'],
+        $data['caracteristicas'],
         $id
     ]);
     

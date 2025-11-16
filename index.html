@@ -52,7 +52,7 @@
                     </div>
 
                     <div class="filter-group">
-                        <label for="price-range">Precio mínimo: <span id="price-value">$50.000</span></label>
+                        <label for="price-range">Precio mínimo: <span id="price-value">$10.000</span></label>
                         <div class="price-slider-container">
                             <input type="range" 
                                    id="price-range" 
@@ -60,7 +60,7 @@
                                    min="10000" 
                                    max="100000" 
                                    step="5000" 
-                                   value="50000">
+                                   value="10000">
                             <div class="price-labels">
                                 <span>$10.000</span>
                                 <span>$1.000.000</span>
@@ -82,16 +82,28 @@
                         <label>Características</label>
                         <div class="features-container">
                             <div class="feature-item">
+                                <input type="checkbox" id="wifi" class="feature-checkbox" value="WiFi">
+                                <label for="wifi">WiFi</label>
+                            </div>
+                            <div class="feature-item">
+                                <input type="checkbox" id="estacionamiento" class="feature-checkbox" value="Estacionamiento">
+                                <label for="estacionamiento">Estacionamiento</label>
+                            </div>
+                            <div class="feature-item">
                                 <input type="checkbox" id="delivery" class="feature-checkbox" value="Delivery">
                                 <label for="delivery">Delivery</label>
                             </div>
                             <div class="feature-item">
-                                <input type="checkbox" id="terraza" class="feature-checkbox" value="Terraza">
-                                <label for="terraza">Terraza</label>
+                                <input type="checkbox" id="reservas" class="feature-checkbox" value="Reservas">
+                                <label for="reservas">Reservas</label>
                             </div>
                             <div class="feature-item">
-                                <input type="checkbox" id="wifi" class="feature-checkbox" value="Wifi">
-                                <label for="wifi">Wifi</label>
+                                <input type="checkbox" id="musica" class="feature-checkbox" value="Música en vivo">
+                                <label for="musica">Música en vivo</label>
+                            </div>
+                            <div class="feature-item">
+                                <input type="checkbox" id="accesible" class="feature-checkbox" value="Accesible">
+                                <label for="accesible">Accesible</label>
                             </div>
                         </div>
                     </div>

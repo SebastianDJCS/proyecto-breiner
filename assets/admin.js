@@ -150,6 +150,13 @@ function editRestaurant(id) {
             document.getElementById('plato_economico').value = restaurant.plato_economico;
             document.getElementById('plato_caro').value = restaurant.plato_caro;
             document.getElementById('url').value = restaurant.url || '';
+            document.getElementById('calificacion').value = restaurant.calificacion || '';
+            
+            // Cargar características
+            const caracteristicasArray = restaurant.caracteristicas ? restaurant.caracteristicas.split(',') : [];
+            document.querySelectorAll('input[name="caracteristicas"]').forEach(checkbox => {
+                checkbox.checked = caracteristicasArray.includes(checkbox.value);
+            });
             
             document.querySelector('.save-btn').textContent = 'Actualizar';
         })
@@ -179,7 +186,8 @@ form.addEventListener('submit', async function(e) {
             precio_max: document.getElementById('precio_max'),
             plato_economico: document.getElementById('plato_economico'),
             plato_caro: document.getElementById('plato_caro'),
-            url: document.getElementById('url')
+            url: document.getElementById('url'),
+            calificacion: document.getElementById('calificacion')
         };
 
         // Validar que todos los campos existen
@@ -198,6 +206,10 @@ form.addEventListener('submit', async function(e) {
             throw new Error(`Campos requeridos faltantes: ${emptyFields.join(', ')}`);
         }
 
+        // Obtener características seleccionadas
+        const caracteristicasCheckboxes = document.querySelectorAll('input[name="caracteristicas"]:checked');
+        const caracteristicas = Array.from(caracteristicasCheckboxes).map(cb => cb.value).join(',');
+
         // Construir objeto de datos
         const formData = {
             nombre: fields.nombre.value.trim(),
@@ -209,7 +221,9 @@ form.addEventListener('submit', async function(e) {
             precio_max: parseInt(fields.precio_max.value) || 0,
             plato_economico: fields.plato_economico.value.trim(),
             plato_caro: fields.plato_caro.value.trim(),
-            url: fields.url.value.trim()
+            url: fields.url.value.trim(),
+            calificacion: parseFloat(fields.calificacion.value),
+            caracteristicas: caracteristicas
         };
 
         console.log('Datos a enviar:', formData);

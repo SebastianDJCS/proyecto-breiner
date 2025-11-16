@@ -22,7 +22,7 @@ try {
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
     $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
     
-    $query = 'SELECT id, nombre, descripcion, direccion, zona_r, tipo, precio_min, precio_max, plato_economico, plato_caro, url FROM restaurantes ORDER BY nombre';
+    $query = 'SELECT id, nombre, descripcion, direccion, zona_r, tipo, precio_min, precio_max, plato_economico, plato_caro, url, calificacion, caracteristicas FROM restaurantes ORDER BY nombre';
     $stmt = $pdo->prepare($query);
     $stmt->execute();
     $restaurants = $stmt->fetchAll();

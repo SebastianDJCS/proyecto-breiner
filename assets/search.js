@@ -33,8 +33,26 @@ function formatPrice(price) {
 
 // Función principal de búsqueda
 async function searchRestaurants(filters) {
-    // La búsqueda se realiza en el servidor
-    const results = await fetchRestaurants(filters);
+    // Obtener todos los restaurantes del servidor
+    let results = await fetchRestaurants(filters);
+    
+    console.log('Restaurantes antes de filtrar:', results.length);
+    
+    // Aplicar filtros del lado del cliente (calificación y características)
+    if (filters.minRating && filters.minRating > 0) {
+        results = results.filter(r => r.calificacion && parseFloat(r.calificacion) >= filters.minRating);
+        console.log('Después de filtrar por calificación:', results.length);
+    }
+    
+    if (filters.features && filters.features.length > 0) {
+        results = results.filter(restaurant => {
+            if (!restaurant.caracteristicas) return false;
+            const restaurantFeatures = restaurant.caracteristicas.split(',').map(f => f.trim());
+            return filters.features.every(feature => restaurantFeatures.includes(feature));
+        });
+        console.log('Después de filtrar por características:', results.length);
+    }
+    
     return results;
 }
 
@@ -75,6 +93,38 @@ function createRestaurantCard(restaurant) {
     // Crear la estructura de precios (símbolos $)
     const priceSymbols = '$'.repeat(Math.min(4, Math.ceil(restaurant.precio_max / 25000)));
     
+    // Crear estrellas para la calificación
+    function createStars(rating) {
+        if (!rating) return '';
+        const numRating = parseFloat(rating);
+        if (isNaN(numRating)) return '';
+        
+        const fullStars = Math.floor(numRating);
+        const hasHalfStar = numRating % 1 !== 0;
+        let stars = '';
+        
+        for (let i = 0; i < fullStars; i++) {
+            stars += '⭐';
+        }
+        if (hasHalfStar) {
+            stars += '✨';
+        }
+        return `<span class="rating-stars">${stars} ${numRating.toFixed(1)}</span>`;
+    }
+    
+    // Crear badges de características
+    function createFeatureBadges(caracteristicas) {
+        if (!caracteristicas) return '';
+        const features = caracteristicas.split(',').filter(f => f.trim());
+        if (features.length === 0) return '';
+        
+        return `
+            <div class="restaurant-features">
+                ${features.map(feature => `<span class="feature-badge">${feature.trim()}</span>`).join('')}
+            </div>
+        `;
+    }
+    
     card.innerHTML = `
         <div class="restaurant-content">
             <div class="restaurant-header">
@@ -85,7 +135,9 @@ function createRestaurantCard(restaurant) {
                 <span class="restaurant-type">${restaurant.tipo}</span>
                 <span class="restaurant-price">${priceSymbols}</span>
                 <span class="restaurant-zone">📍 ${restaurant.zona_r}</span>
+                ${restaurant.calificacion ? createStars(restaurant.calificacion) : ''}
             </div>
+            ${createFeatureBadges(restaurant.caracteristicas)}
             <div class="restaurant-price-range">
                 <span>${formatPrice(restaurant.precio_min)} - ${formatPrice(restaurant.precio_max)}</span>
             </div>
@@ -130,10 +182,16 @@ function setupSearchFilters() {
     searchForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         
+        // Obtener características seleccionadas
+        const selectedFeatures = Array.from(document.querySelectorAll('.feature-checkbox:checked'))
+            .map(cb => cb.value);
+        
         const filters = {
             searchText: document.getElementById('search-text').value,
             tipo: document.getElementById('category-filter').value,
-            maxPrice: parseInt(document.getElementById('price-range').value)
+            maxPrice: parseInt(document.getElementById('price-range').value),
+            minRating: parseFloat(document.getElementById('rating-filter').value),
+            features: selectedFeatures
         };
 
         console.log('Filtros aplicados:', filters);
