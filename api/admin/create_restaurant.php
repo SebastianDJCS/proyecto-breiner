@@ -31,8 +31,21 @@ error_log("Método HTTP: " . $_SERVER['REQUEST_METHOD']);
 $raw_data = file_get_contents('php://input');
 error_log("Datos raw recibidos: " . $raw_data);
 
+// Configuración de la base de datos
+$host = 'ep-bitter-pond-adc167pq-pooler.c-2.us-east-1.aws.neon.tech';
+$dbname = 'neondb';
+$user = 'neondb_owner';
+$pass = 'npg_3xo2bVKjNDei';
+$port = '5432';
+
+$pdo = null;
+
 try {
-    require_once '../config/database.php';
+    $dsn = "pgsql:host=$host;port=$port;dbname=$dbname;sslmode=require";
+    $pdo = new PDO($dsn, $user, $pass);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+    $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
     
     // Decodificar JSON
     $data = json_decode($raw_data, true);
@@ -42,19 +55,19 @@ try {
     
     error_log("Datos decodificados: " . print_r($data, true));
 
-    // Validar campos requeridos
-    $required = ['nombre', 'descripcion', 'direccion', 'zona_r', 'tipo', 'precio_min', 'precio_max', 'plato_economico', 'plato_caro'];
+    // Validar datos requeridos
+    $required = ['nombre', 'descripcion', 'direccion', 'zona_r', 'tipo', 'precio_min', 'precio_max', 'plato_economico', 'plato_caro', 'url'];
     $missing = array_filter($required, fn($field) => !isset($data[$field]) || trim($data[$field]) === '');
     
     if (!empty($missing)) {
         throw new Exception("Campos requeridos faltantes: " . implode(', ', $missing));
     }
 
-    // Preparar la consulta
+    // Preparar la consulta - usar ? en lugar de $1, $2, etc.
     $sql = "INSERT INTO restaurantes (
         nombre, descripcion, direccion, zona_r, tipo, 
-        precio_min, precio_max, plato_economico, plato_caro
-    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) 
+        precio_min, precio_max, plato_economico, plato_caro, url
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) 
     RETURNING id";
 
     error_log("SQL a ejecutar: " . $sql);
@@ -69,7 +82,8 @@ try {
         (int)$data['precio_min'],
         (int)$data['precio_max'],
         $data['plato_economico'],
-        $data['plato_caro']
+        $data['plato_caro'],
+        $data['url']
     ];
     
     error_log("Parámetros: " . print_r($params, true));
@@ -81,20 +95,25 @@ try {
         throw new Exception('No se pudo obtener el ID del restaurante creado');
     }
     
+    // Cerrar conexión explícitamente
+    $stmt = null;
+    $pdo = null;
+    
     http_response_code(201);
     echo json_encode([
         'success' => true,
         'id' => $result['id'],
         'message' => 'Restaurante creado exitosamente'
-    ]);
+    ], JSON_UNESCAPED_UNICODE);
 
 } catch (Exception $e) {
+    // Cerrar conexión en caso de error
+    $pdo = null;
+    
     error_log("Error en create_restaurant.php: " . $e->getMessage());
     http_response_code(500);
     echo json_encode([
         'success' => false,
-        'error' => $e->getMessage(),
-        'trace' => $e->getTraceAsString()
-    ]);
+        'error' => $e->getMessage()
+    ], JSON_UNESCAPED_UNICODE);
 }
-?>

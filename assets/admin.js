@@ -31,7 +31,7 @@ function formatPriceRange(min, max) {
 // Funciones CRUD
 async function getRestaurants() {
     try {
-        const response = await fetch('./api/admin/get_restaurants.php');
+        const response = await fetch('api/admin/get_restaurants.php');
         if (!response.ok) throw new Error('Error al obtener los restaurantes');
         
         const restaurants = await response.json();
@@ -44,7 +44,7 @@ async function getRestaurants() {
 async function createRestaurant(data) {
     try {
         console.log('Enviando datos:', data);
-        const response = await fetch('./api/admin/create_restaurant.php', {
+        const response = await fetch('api/admin/create_restaurant.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -149,6 +149,7 @@ function editRestaurant(id) {
             document.getElementById('precio_max').value = restaurant.precio_max;
             document.getElementById('plato_economico').value = restaurant.plato_economico;
             document.getElementById('plato_caro').value = restaurant.plato_caro;
+            document.getElementById('url').value = restaurant.url || '';
             
             document.querySelector('.save-btn').textContent = 'Actualizar';
         })
@@ -177,7 +178,8 @@ form.addEventListener('submit', async function(e) {
             precio_min: document.getElementById('precio_min'),
             precio_max: document.getElementById('precio_max'),
             plato_economico: document.getElementById('plato_economico'),
-            plato_caro: document.getElementById('plato_caro')
+            plato_caro: document.getElementById('plato_caro'),
+            url: document.getElementById('url')
         };
 
         // Validar que todos los campos existen
@@ -206,7 +208,8 @@ form.addEventListener('submit', async function(e) {
             precio_min: parseInt(fields.precio_min.value) || 0,
             precio_max: parseInt(fields.precio_max.value) || 0,
             plato_economico: fields.plato_economico.value.trim(),
-            plato_caro: fields.plato_caro.value.trim()
+            plato_caro: fields.plato_caro.value.trim(),
+            url: fields.url.value.trim()
         };
 
         console.log('Datos a enviar:', formData);

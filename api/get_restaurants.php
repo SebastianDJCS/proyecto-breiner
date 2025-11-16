@@ -1,101 +1,76 @@
 <?php
-header('Content-Type: application/json');
+// Limpiar cualquier salida anterior
+if (ob_get_level()) ob_end_clean();
+
+// Headers
+header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST');
+header('Access-Control-Allow-Methods: GET');
 header('Access-Control-Allow-Headers: Content-Type');
 
-require_once '../config/database.php';
+// Configuración de la base de datos
+$host = 'ep-bitter-pond-adc167pq-pooler.c-2.us-east-1.aws.neon.tech';
+$dbname = 'neondb';
+$user = 'neondb_owner';
+$pass = 'npg_3xo2bVKjNDei';
+$port = '5432';
 
-function getRestaurants($filters = []) {
-    global $pdo;
+$pdo = null;
+
+try {
+    $dsn = "pgsql:host=$host;port=$port;dbname=$dbname;sslmode=require";
+    $pdo = new PDO($dsn, $user, $pass);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+    $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
     
-    try {
-        $where = [];
-        $params = [];
-        
-        // Construir la consulta base
-        $sql = "SELECT 
-                    r.id,
-                    r.nombre as name,
-                    r.categoria as category,
-                    r.precio_promedio as averagePrice,
-                    r.calificacion as rating,
-                    r.ubicacion as location,
-                    r.tipo_cocina as cuisineType,
-                    r.horario as schedule,
-                    r.direccion as address,
-                    STRING_AGG(c.caracteristica, ',') as features
-                FROM restaurantes r
-                LEFT JOIN caracteristicas_restaurante cr ON r.id = cr.restaurante_id
-                LEFT JOIN caracteristicas c ON cr.caracteristica_id = c.id";
-
-        // Filtrar por texto de búsqueda
-        if (!empty($filters['searchText'])) {
-            $where[] = "(r.nombre ILIKE ? OR r.direccion ILIKE ?)";
-            $searchTerm = "%{$filters['searchText']}%";
-            $params[] = $searchTerm;
-            $params[] = $searchTerm;
-        }
-
-        // Filtrar por categoría
-        if (!empty($filters['category']) && $filters['category'] !== 'all') {
-            $where[] = "r.categoria = ?";
-            $params[] = $filters['category'];
-        }
-
-        // Filtrar por precio mínimo
-        if (!empty($filters['minPrice'])) {
-            $where[] = "r.precio_promedio >= ?";
-            $params[] = $filters['minPrice'];
-        }
-
-        // Filtrar por calificación mínima
-        if (!empty($filters['minRating'])) {
-            $where[] = "r.calificacion >= ?";
-            $params[] = $filters['minRating'];
-        }
-
-        // Filtrar por características
-        if (!empty($filters['features'])) {
-            $featuresCount = count($filters['features']);
-            $placeholders = str_repeat('?,', $featuresCount - 1) . '?';
-            $where[] = "c.caracteristica IN ($placeholders)";
-            $params = array_merge($params, $filters['features']);
-        }
-
-        // Agregar condiciones WHERE si existen
-        if (!empty($where)) {
-            $sql .= " WHERE " . implode(" AND ", $where);
-        }
-
-        // Agrupar por restaurante para manejar múltiples características
-        $sql .= " GROUP BY r.id";
-
-        // Preparar y ejecutar la consulta
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute($params);
-        
-        return $stmt->fetchAll();
-
-    } catch(PDOException $e) {
-        http_response_code(500);
-        return ["error" => "Error en la base de datos: " . $e->getMessage()];
+    // Construir la consulta base
+    $sql = "SELECT id, nombre, descripcion, direccion, zona_r, tipo, precio_min, precio_max, plato_economico, plato_caro, url FROM restaurantes WHERE 1=1";
+    $params = [];
+    
+    // Filtrar por búsqueda de texto
+    if (!empty($_GET['search'])) {
+        $sql .= " AND (nombre ILIKE ? OR descripcion ILIKE ? OR direccion ILIKE ?)";
+        $searchTerm = "%{$_GET['search']}%";
+        $params[] = $searchTerm;
+        $params[] = $searchTerm;
+        $params[] = $searchTerm;
     }
-}
-
-// Manejar la solicitud
-if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    // Obtener parámetros de búsqueda
-    $filters = [
-        'searchText' => $_GET['search'] ?? '',
-        'category' => $_GET['category'] ?? '',
-        'maxPrice' => $_GET['maxPrice'] ?? null,
-        'minRating' => $_GET['rating'] ?? null,
-        'features' => isset($_GET['features']) ? explode(',', $_GET['features']) : []
-    ];
-
-    echo json_encode(getRestaurants($filters));
-} else {
-    http_response_code(405);
-    echo json_encode(["error" => "Método no permitido"]);
+    
+    // Filtrar por zona
+    if (!empty($_GET['zona'])) {
+        $sql .= " AND zona_r = ?";
+        $params[] = $_GET['zona'];
+    }
+    
+    // Filtrar por tipo
+    if (!empty($_GET['tipo'])) {
+        $sql .= " AND tipo = ?";
+        $params[] = $_GET['tipo'];
+    }
+    
+    // Filtrar por precio mínimo (buscar restaurantes con precio_min mayor o igual al valor seleccionado)
+    if (!empty($_GET['precio_max'])) {
+        $sql .= " AND precio_min >= ?";
+        $params[] = (int)$_GET['precio_max'];
+    }
+    
+    // Ordenar por nombre
+    $sql .= " ORDER BY nombre";
+    
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute($params);
+    $restaurants = $stmt->fetchAll();
+    
+    $pdo = null;
+    
+    echo json_encode($restaurants, JSON_UNESCAPED_UNICODE);
+    
+} catch (PDOException $e) {
+    $pdo = null;
+    http_response_code(500);
+    echo json_encode([
+        'error' => 'Error al obtener los restaurantes',
+        'message' => $e->getMessage()
+    ], JSON_UNESCAPED_UNICODE);
 }
