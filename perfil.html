@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil - GastroGuia</title>
+    <link rel="stylesheet" href="assets/estilos.css">
+    <script src="assets/auth-ui.js" defer></script>
+</head>
+<body>
+    <header class="main-header">
+        <nav class="nav-menu">
+            <div class="nav-container">
+                <div class="logo">
+                    <a href="index.html">
+                        <img src="img/sopa.png" alt="GastroGuia Logo">
+                    </a>
+                </div>
+                <div class="nav-items">
+                    <!-- Se llenará dinámicamente -->
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="profile-main">
+        <div class="profile-container">
+            <h1>Mi Perfil</h1>
+            
+            <div class="profile-sections">
+                <!-- Información del perfil -->
+                <section class="profile-info-section">
+                    <h2>Información Personal</h2>
+                    <div id="error-message" class="error-message" style="display: none;"></div>
+                    <div id="success-message" class="success-message" style="display: none;"></div>
+                    
+                    <form id="profile-form" class="profile-form">
+                        <div class="form-group">
+                            <label for="username">Usuario:</label>
+                            <input type="text" id="username" name="username" disabled>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="nombre">Nombre Completo:</label>
+                            <input type="text" id="nombre" name="nombre" placeholder="Tu nombre completo">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email:</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+
+                        <button type="submit" class="admin-btn save-btn">Guardar Cambios</button>
+                    </form>
+                </section>
+
+                <!-- Cambiar contraseña -->
+                <section class="profile-info-section">
+                    <h2>Cambiar Contraseña</h2>
+                    <div id="password-error" class="error-message" style="display: none;"></div>
+                    <div id="password-success" class="success-message" style="display: none;"></div>
+                    
+                    <form id="password-form" class="profile-form">
+                        <div class="form-group">
+                            <label for="current-password">Contraseña Actual:</label>
+                            <input type="password" id="current-password" name="current-password" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="new-password">Nueva Contraseña:</label>
+                            <input type="password" id="new-password" name="new-password" required minlength="6">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="confirm-password">Confirmar Nueva Contraseña:</label>
+                            <input type="password" id="confirm-password" name="confirm-password" required minlength="6">
+                        </div>
+
+                        <button type="submit" class="admin-btn save-btn">Cambiar Contraseña</button>
+                    </form>
+                </section>
+
+                <!-- Estadísticas -->
+                <section class="profile-stats-section">
+                    <h2>Mis Estadísticas</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">❤️</div>
+                            <div class="stat-number" id="total-favorites">0</div>
+                            <div class="stat-label">Favoritos</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">📅</div>
+                            <div class="stat-number" id="member-since">-</div>
+                            <div class="stat-label">Miembro desde</div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <p>&copy; 2025 GastroGuia. Todos los derechos reservados.</p>
+    </footer>
+
+    <script src="assets/perfil.js"></script>
+</body>
+</html>

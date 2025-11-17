@@ -1,3 +1,6 @@
+// Variables globales
+let userFavorites = [];
+
 // Función para obtener restaurantes de la API
 async function fetchRestaurants(filters) {
     try {
@@ -8,7 +11,9 @@ async function fetchRestaurants(filters) {
         if (filters.zona) params.append('zona', filters.zona);
         if (filters.maxPrice) params.append('precio_max', filters.maxPrice);
 
-        const response = await fetch(`api/get_restaurants.php?${params}`);
+        const response = await fetch(`api/get_restaurants.php?${params}`, {
+            credentials: 'same-origin'
+        });
         if (!response.ok) {
             throw new Error('Error en la respuesta del servidor');
         }
@@ -72,6 +77,86 @@ function updateResults(results) {
         const restaurantCard = createRestaurantCard(restaurant);
         resultsContainer.appendChild(restaurantCard);
     });
+    
+    // Actualizar estado de favoritos después de renderizar
+    updateFavoritesUI();
+}
+
+// Función para verificar y cargar favoritos del usuario
+async function loadUserFavorites() {
+    try {
+        const response = await fetch('api/favoritos/check.php', {
+            credentials: 'same-origin'
+        });
+        const data = await response.json();
+        
+        if (data.success && data.loggedIn) {
+            userFavorites = data.favoritos || [];
+        } else {
+            userFavorites = [];
+        }
+    } catch (error) {
+        console.error('Error al cargar favoritos:', error);
+        userFavorites = [];
+    }
+}
+
+// Función para toggle favorito
+async function toggleFavorite(restauranteId, button) {
+    console.log('Toggle favorito llamado para restaurante:', restauranteId);
+    try {
+        const response = await fetch('api/favoritos/toggle.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'same-origin',
+            body: JSON.stringify({ restaurante_id: restauranteId })
+        });
+        
+        console.log('Respuesta recibida:', response.status);
+        const data = await response.json();
+        console.log('Data del servidor:', data);
+        
+        if (!data.success) {
+            if (response.status === 401) {
+                alert('Debes iniciar sesión para agregar favoritos');
+                window.location.href = 'login.html';
+            } else {
+                alert(data.error || 'Error al procesar favorito');
+            }
+            return;
+        }
+        
+        // Actualizar array local
+        if (data.action === 'added') {
+            userFavorites.push(restauranteId);
+            button.textContent = '❤️';
+            button.classList.add('is-favorite');
+        } else {
+            userFavorites = userFavorites.filter(id => id !== restauranteId);
+            button.textContent = '♡';
+            button.classList.remove('is-favorite');
+        }
+        
+    } catch (error) {
+        console.error('Error al toggle favorito:', error);
+        alert('Error de conexión');
+    }
+}
+
+// Función para actualizar UI de favoritos
+function updateFavoritesUI() {
+    document.querySelectorAll('.favorite-btn').forEach(btn => {
+        const restaurantId = parseInt(btn.dataset.restaurantId);
+        if (userFavorites.includes(restaurantId)) {
+            btn.textContent = '❤️';
+            btn.classList.add('is-favorite');
+        } else {
+            btn.textContent = '♡';
+            btn.classList.remove('is-favorite');
+        }
+    });
 }
 
 // Función para crear una tarjeta de restaurante
@@ -129,7 +214,7 @@ function createRestaurantCard(restaurant) {
         <div class="restaurant-content">
             <div class="restaurant-header">
                 <h3 class="restaurant-name">${restaurant.nombre}</h3>
-                <button class="favorite-btn">♡</button>
+                <button class="favorite-btn" data-restaurant-id="${restaurant.id}">♡</button>
             </div>
             <div class="restaurant-meta">
                 <span class="restaurant-type">${restaurant.tipo}</span>
@@ -150,11 +235,22 @@ function createRestaurantCard(restaurant) {
         </div>
     `;
     
+    // Agregar evento al botón de favoritos
+    const favoriteBtn = card.querySelector('.favorite-btn');
+    favoriteBtn.addEventListener('click', (e) => {
+        console.log('Click en botón de favorito!', restaurant.id);
+        e.stopPropagation();
+        toggleFavorite(restaurant.id, favoriteBtn);
+    });
+    
     return card;
 }
 
 // Event listeners cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', () => {
+    // Cargar favoritos del usuario
+    loadUserFavorites();
+    
     // Inicializar los filtros
     setupSearchFilters();
     

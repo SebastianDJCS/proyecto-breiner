@@ -10,7 +10,9 @@
     <nav class="nav-menu">
         <div class="nav-container">
             <div class="logo">
-                <img src="img/sopa.png" alt="GastroGuia Logo">
+                <a href="index.html">
+                    <img src="img/sopa.png" alt="GastroGuia Logo">
+                </a>
             </div>
             <div class="nav-items">
                 <a href="index.html" class="nav-btn">Inicio</a>
@@ -20,21 +22,27 @@
     </nav>
     <h1 class="titulo">Registrate</h1>
     <div class="container">
-        <form action="/register" method="POST">
-            <label for="username">Nombre:</label>
-            <input type="text" id="username" name="username" placeholder="Ingrese su nombre" >
+        <div id="error-message" class="error-message" style="display: none;"></div>
+        <form id="registerForm">
+            <label for="nombre">Nombre Completo:</label>
+            <input type="text" id="nombre" name="nombre" placeholder="Ingrese su nombre completo">
             
-            <label for="user">Usuario:</label>
-            <input type="text" id="user" name="user" placeholder="Ingrese su usuario" >
+            <label for="username">Usuario: *</label>
+            <input type="text" id="username" name="username" placeholder="Ingrese su usuario" required>
 
-            <label for="email">Correo Electrónico:</label>
-            <input type="email" id="email" name="email" placeholder="Ingrese su correo electrónico" >
+            <label for="email">Correo Electrónico: *</label>
+            <input type="email" id="email" name="email" placeholder="Ingrese su correo electrónico" required>
 
-            <label for="password">Contraseña:</label>
-            <input type="password" id="password" name="password" placeholder="Ingrese su contraseña" >
+            <label for="password">Contraseña: *</label>
+            <input type="password" id="password" name="password" placeholder="Ingrese su contraseña (mínimo 6 caracteres)" required>
 
-            <button type="submit" class="boton">Registrar</button>
+            <label for="confirm-password">Confirmar Contraseña: *</label>
+            <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirme su contraseña" required>
+
+            <button type="submit" class="boton">Registrarse</button>
         </form>
+        <p class="register-link">¿Ya tienes cuenta? <a href="login.html">Inicia sesión aquí</a></p>
     </div>
+    <script src="assets/acceso.js"></script>
 </body>
 </html>

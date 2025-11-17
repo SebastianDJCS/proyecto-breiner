@@ -31,7 +31,9 @@ function formatPriceRange(min, max) {
 // Funciones CRUD
 async function getRestaurants() {
     try {
-        const response = await fetch('api/admin/get_restaurants.php');
+        const response = await fetch('api/admin/get_restaurants.php', {
+            credentials: 'same-origin'
+        });
         if (!response.ok) throw new Error('Error al obtener los restaurantes');
         
         const restaurants = await response.json();
@@ -49,6 +51,7 @@ async function createRestaurant(data) {
             headers: {
                 'Content-Type': 'application/json'
             },
+            credentials: 'same-origin',
             body: JSON.stringify(data)
         });
         
@@ -82,6 +85,7 @@ async function updateRestaurant(id, data) {
             headers: {
                 'Content-Type': 'application/json'
             },
+            credentials: 'same-origin',
             body: JSON.stringify(data)
         });
         
@@ -100,7 +104,8 @@ async function deleteRestaurant(id) {
     
     try {
         const response = await fetch(`api/admin/delete_restaurant.php?id=${id}`, {
-            method: 'DELETE'
+            method: 'DELETE',
+            credentials: 'same-origin'
         });
         
         if (!response.ok) throw new Error('Error al eliminar el restaurante');
@@ -136,7 +141,9 @@ function displayRestaurants(restaurants) {
 function editRestaurant(id) {
     editingId = id;
     
-    fetch(`api/admin/get_restaurant.php?id=${id}`)
+    fetch(`api/admin/get_restaurant.php?id=${id}`, {
+            credentials: 'same-origin'
+        })
         .then(response => response.json())
         .then(restaurant => {
             document.getElementById('restaurant-id').value = restaurant.id;

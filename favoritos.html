@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Favoritos - GastroGuia</title>
+    <link rel="stylesheet" href="assets/estilos.css">
+    <script src="assets/auth-ui.js" defer></script>
+</head>
+<body>
+    <header class="main-header">
+        <nav class="nav-menu">
+            <div class="nav-container">
+                <div class="logo">
+                    <a href="index.html">
+                        <img src="img/sopa.png" alt="GastroGuia Logo">
+                    </a>
+                </div>
+                <div class="nav-items">
+                    <!-- Se llenará dinámicamente -->
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main id="main-content" role="main" style="padding-top: 100px;">
+        <section class="favorites-section">
+            <div class="search-container">
+                <h1>Mis Restaurantes Favoritos</h1>
+                <p class="favorites-subtitle">Tus restaurantes guardados para futuras visitas</p>
+                
+                <div id="favorites-results" class="search-results">
+                    <div class="loading">Cargando favoritos...</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <p>&copy; 2025 GastroGuia. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        // Función para formatear precio
+        function formatPrice(price) {
+            return new Intl.NumberFormat('es-CO', {
+                style: 'currency',
+                currency: 'COP',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(price);
+        }
+
+        // Función para cargar favoritos
+        async function loadFavorites() {
+            const container = document.getElementById('favorites-results');
+            
+            try {
+                const response = await fetch('api/favoritos/get.php');
+                const data = await response.json();
+                
+                if (!data.success) {
+                    if (response.status === 401) {
+                        container.innerHTML = '<p class="error-message">Debes iniciar sesión para ver tus favoritos</p>';
+                        setTimeout(() => window.location.href = 'login.html', 2000);
+                        return;
+                    }
+                    throw new Error(data.error);
+                }
+                
+                if (data.favoritos.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <h3>No tienes favoritos aún</h3>
+                            <p>Explora restaurantes y agrégalos a tus favoritos</p>
+                            <a href="index.html" class="nav-btn">Explorar Restaurantes</a>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                container.innerHTML = '';
+                data.favoritos.forEach(restaurant => {
+                    const card = createFavoriteCard(restaurant);
+                    container.appendChild(card);
+                });
+                
+            } catch (error) {
+                console.error('Error al cargar favoritos:', error);
+                container.innerHTML = '<p class="error-message">Error al cargar favoritos</p>';
+            }
+        }
+
+        // Función para crear tarjeta de favorito
+        function createFavoriteCard(restaurant) {
+            const card = document.createElement('div');
+            card.className = 'restaurant-card';
+            
+            const priceSymbols = '$'.repeat(Math.min(4, Math.ceil(restaurant.precio_max / 25000)));
+            
+            card.innerHTML = `
+                <div class="restaurant-content">
+                    <div class="restaurant-header">
+                        <h3 class="restaurant-name">${restaurant.nombre}</h3>
+                        <button class="favorite-btn remove-favorite" data-id="${restaurant.id}">❤️</button>
+                    </div>
+                    <div class="restaurant-meta">
+                        <span class="restaurant-type">${restaurant.tipo}</span>
+                        <span class="restaurant-price">${priceSymbols}</span>
+                        <span class="restaurant-zone">📍 ${restaurant.zona_r}</span>
+                        ${restaurant.calificacion ? `<span class="rating-stars">⭐ ${parseFloat(restaurant.calificacion).toFixed(1)}</span>` : ''}
+                    </div>
+                    <div class="restaurant-price-range">
+                        <span>${formatPrice(restaurant.precio_min)} - ${formatPrice(restaurant.precio_max)}</span>
+                    </div>
+                    <p class="restaurant-description">${restaurant.descripcion}</p>
+                    <p class="restaurant-address">${restaurant.direccion}</p>
+                    ${restaurant.url ? `<a href="${restaurant.url}" target="_blank" class="visit-btn">Visitar Sitio Web</a>` : ''}
+                </div>
+            `;
+            
+            // Evento para remover favorito
+            const removeBtn = card.querySelector('.remove-favorite');
+            removeBtn.addEventListener('click', async (e) => {
+                e.stopPropagation();
+                if (confirm('¿Eliminar de favoritos?')) {
+                    await removeFavorite(restaurant.id, card);
+                }
+            });
+            
+            return card;
+        }
+
+        // Función para remover favorito
+        async function removeFavorite(restaurantId, card) {
+            try {
+                const response = await fetch('api/favoritos/toggle.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ restaurante_id: restaurantId })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    card.style.animation = 'fadeOut 0.3s ease';
+                    setTimeout(() => {
+                        card.remove();
+                        
+                        const container = document.getElementById('favorites-results');
+                        if (container.children.length === 0) {
+                            container.innerHTML = `
+                                <div class="empty-state">
+                                    <h3>No tienes favoritos</h3>
+                                    <a href="index.html" class="nav-btn">Explorar Restaurantes</a>
+                                </div>
+                            `;
+                        }
+                    }, 300);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al eliminar favorito');
+            }
+        }
+
+        // Cargar favoritos al cargar la página
+        document.addEventListener('DOMContentLoaded', loadFavorites);
+    </script>
+
+    <style>
+        .favorites-section {
+            padding: 2rem 1rem;
+            min-height: calc(100vh - 200px);
+        }
+
+        .favorites-subtitle {
+            color: #666;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+        }
+
+        .empty-state h3 {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state p {
+            color: #999;
+            margin-bottom: 2rem;
+        }
+
+        .visit-btn {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.6rem 1.2rem;
+            background: #ce8d00;
+            color: white;
+            text-decoration: none;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .visit-btn:hover {
+            background: #b57b00;
+            transform: translateY(-2px);
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; transform: scale(1); }
+            to { opacity: 0; transform: scale(0.9); }
+        }
+    </style>
+</body>
+</html>
