@@ -119,12 +119,12 @@ function displayRestaurants(restaurants) {
     restaurants.forEach(restaurant => {
         const row = document.createElement('tr');
         row.innerHTML = `
-            <td>${restaurant.nombre}</td>
-            <td>${restaurant.tipo}</td>
-            <td>${restaurant.zona_r}</td>
-            <td>${formatPriceRange(restaurant.precio_min, restaurant.precio_max)}</td>
-            <td>${restaurant.direccion}</td>
-            <td class="action-buttons">
+            <td data-label="Nombre">${restaurant.nombre}</td>
+            <td data-label="Tipo">${restaurant.tipo}</td>
+            <td data-label="Zona">${restaurant.zona_r}</td>
+            <td data-label="Precio">${formatPriceRange(restaurant.precio_min, restaurant.precio_max)}</td>
+            <td data-label="Dirección">${restaurant.direccion}</td>
+            <td class="action-buttons" data-label="Acciones">
                 <button onclick="editRestaurant(${restaurant.id})" class="edit-btn">Editar</button>
                 <button onclick="deleteRestaurant(${restaurant.id})" class="delete-btn">Eliminar</button>
             </td>

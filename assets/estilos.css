@@ -658,3 +658,367 @@ footer {
     border-radius: 5px;
     margin: 1rem 0;
 }
+
+/* ============================================
+   MEDIA QUERIES - RESPONSIVE DESIGN
+   ============================================ */
+
+/* Tablets y dispositivos medianos (768px - 1024px) */
+@media screen and (max-width: 1024px) {
+    .nav-container {
+        padding: 0 1rem;
+    }
+    
+    #search-results {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+    
+    .search-container {
+        padding: 1.5rem;
+    }
+    
+    .admin-container {
+        padding: 1.5rem;
+    }
+}
+
+/* Tablets pequeños (600px - 768px) */
+@media screen and (max-width: 768px) {
+    /* Header responsive */
+    .nav-items {
+        gap: 1rem;
+    }
+    
+    .nav-btn {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
+    }
+    
+    .logo img {
+        height: 35px;
+    }
+    
+    /* Hero section */
+    #hero {
+        padding: 6rem 1rem 3rem;
+    }
+    
+    .hero-content h1 {
+        font-size: 2rem;
+    }
+    
+    .hero-content p {
+        font-size: 1rem;
+    }
+    
+    /* Buscador */
+    #buscador {
+        padding: 2rem 1rem;
+    }
+    
+    .search-container {
+        padding: 1.5rem;
+    }
+    
+    .search-form {
+        grid-template-columns: 1fr;
+    }
+    
+    .filter-group {
+        margin-bottom: 1rem;
+    }
+    
+    .features-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    /* Resultados */
+    #search-results {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .restaurant-card {
+        padding: 1.2rem;
+    }
+    
+    .restaurant-name {
+        font-size: 1.2rem;
+    }
+    
+    /* Admin panel */
+    .admin-container {
+        padding: 1rem;
+        margin-top: 80px;
+    }
+    
+    .crud-form,
+    .restaurants-table {
+        padding: 1.5rem;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .admin-btn {
+        width: 100%;
+    }
+    
+    .checkbox-group {
+        grid-template-columns: 1fr;
+    }
+    
+    /* Tabla responsive */
+    .table-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    #restaurants-list {
+        font-size: 0.9rem;
+    }
+    
+    #restaurants-list th,
+    #restaurants-list td {
+        padding: 0.75rem 0.5rem;
+    }
+}
+
+/* Móviles (hasta 600px) */
+@media screen and (max-width: 600px) {
+    /* Header mobile */
+    .nav-menu {
+        padding: 0.75rem;
+    }
+    
+    .nav-container {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    
+    .logo {
+        flex: 1;
+    }
+    
+    .logo img {
+        height: 30px;
+    }
+    
+    .nav-items {
+        flex: 1;
+        justify-content: flex-end;
+        gap: 0.5rem;
+    }
+    
+    .nav-btn {
+        padding: 0.5rem 0.8rem;
+        font-size: 0.85rem;
+    }
+    
+    /* Hero mobile */
+    #hero {
+        padding: 5rem 1rem 2rem;
+        min-height: 40vh;
+    }
+    
+    .hero-content h1 {
+        font-size: 1.5rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .hero-content p {
+        font-size: 0.9rem;
+    }
+    
+    /* Buscador mobile */
+    #buscador {
+        padding: 1.5rem 0.75rem;
+    }
+    
+    .search-container {
+        padding: 1rem;
+    }
+    
+    .search-container h2 {
+        font-size: 1.3rem;
+        margin-bottom: 1rem;
+    }
+    
+    .features-container {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+    
+    .feature-item {
+        padding: 0.6rem;
+    }
+    
+    .search-button {
+        width: 100%;
+        padding: 1rem;
+        font-size: 1rem;
+    }
+    
+    /* Tarjetas mobile */
+    .restaurant-card {
+        padding: 1rem;
+    }
+    
+    .restaurant-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .favorite-btn {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        width: 30px;
+        height: 30px;
+        font-size: 20px;
+    }
+    
+    .restaurant-name {
+        font-size: 1.1rem;
+        padding-right: 40px;
+    }
+    
+    .restaurant-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .restaurant-features {
+        gap: 0.4rem;
+    }
+    
+    .feature-badge {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+    }
+    
+    .restaurant-dishes {
+        padding: 0.6rem;
+        font-size: 0.85rem;
+    }
+    
+    /* Admin mobile */
+    .admin-container {
+        margin-top: 70px;
+        padding: 0.75rem;
+    }
+    
+    .admin-container h1 {
+        font-size: 1.5rem;
+    }
+    
+    .admin-container h2 {
+        font-size: 1.2rem;
+    }
+    
+    .crud-form,
+    .restaurants-table {
+        padding: 1rem;
+    }
+    
+    .form-group label {
+        font-size: 0.9rem;
+    }
+    
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        font-size: 0.9rem;
+        padding: 0.6rem;
+    }
+    
+    .checkbox-label {
+        font-size: 0.9rem;
+        padding: 0.4rem;
+    }
+    
+    /* Tabla mobile - formato apilado */
+    #restaurants-list thead {
+        display: none;
+    }
+    
+    #restaurants-list,
+    #restaurants-list tbody,
+    #restaurants-list tr,
+    #restaurants-list td {
+        display: block;
+        width: 100%;
+    }
+    
+    #restaurants-list tr {
+        margin-bottom: 1rem;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 1rem;
+        background: white;
+    }
+    
+    #restaurants-list td {
+        text-align: left;
+        padding: 0.5rem 0;
+        border: none;
+        position: relative;
+        padding-left: 50%;
+    }
+    
+    #restaurants-list td:before {
+        content: attr(data-label);
+        position: absolute;
+        left: 0;
+        width: 45%;
+        padding-right: 10px;
+        font-weight: bold;
+        color: #666;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+        gap: 0.5rem;
+        padding-left: 0 !important;
+    }
+    
+    .action-buttons:before {
+        display: none;
+    }
+    
+    .edit-btn,
+    .delete-btn {
+        width: 100%;
+        text-align: center;
+    }
+    
+    /* Footer mobile */
+    .main-footer {
+        padding: 1.5rem 1rem;
+        font-size: 0.85rem;
+    }
+}
+
+/* Móviles muy pequeños (hasta 375px) */
+@media screen and (max-width: 375px) {
+    .hero-content h1 {
+        font-size: 1.3rem;
+    }
+    
+    .search-container h2 {
+        font-size: 1.1rem;
+    }
+    
+    .restaurant-name {
+        font-size: 1rem;
+    }
+    
+    .nav-btn {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.8rem;
+    }
+}
